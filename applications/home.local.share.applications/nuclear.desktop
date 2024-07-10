@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Nuclear music player
+Exec=/home/ivan/Programs/nuclear-v0.6.30.AppImage
+Terminal=false
+Type=Application
+Icon=/home/ivan/Projects/Dot-files/dot-files/Icons/nuclear-c1de2111b16e6b21b794451fe54ef86f.png
+#X-AppImage-Version=0.8.15
+Comment=Desktop music player focused on streaming from free sources
+Categories=AudioVideo;Audio;Player;
+MimeType=x-scheme-handler/discord-1038970224050962582;text/html;

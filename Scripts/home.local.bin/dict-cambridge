@@ -1,0 +1,136 @@
+#!/usr/bin/python3
+
+# Taken from https://github.com/spignelon/cambridge-dictionary
+
+import requests
+from bs4 import BeautifulSoup
+import sys
+import sqlite3
+import os
+
+GREY="\u001b[38;5;245m"
+BLUE='\033[94m'
+NORMAL='\033[0m'
+BOLD = '\033[1m'
+
+QUOTE=1
+ITEM=0
+
+right_margin=80
+use_color = sys.stdout.isatty()
+
+database_path = "~/.mydictionaries/cambridge-database.db"
+database_path = os.path.expanduser(database_path)
+if not os.path.isfile(database_path):
+    exists = False
+    os.system("mkdir -p "+os.path.dirname(database_path))
+else:
+    exists = True
+
+conn = sqlite3.connect(database_path)
+c = conn.cursor()
+
+if exists == False:
+    c.execute('''CREATE TABLE dictionary(word TEXT, meaning TEXT)''')
+
+headers = {
+    "Accept-Encoding": "gzip, deflate, br",
+    "Upgrade-Insecure-Requests": "1",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
+    "Sec-Gpc": "1",
+    "Accept-Language": "en-US,en;q=0.6",
+    "Sec-Fetch-Site": "same-origin",
+    "Sec-Fetch-User": "?1",
+    "Sec-Fetch-Dest": "document",
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36",
+    "Sec-Fetch-Mode": "navigate"
+}
+
+def print_out(meaning, use_color):
+    if not use_color:
+        meaning=meaning.replace(GREY, "")
+        meaning=meaning.replace(NORMAL, "")
+    print(meaning)
+
+def print_paragraph(left_margin, text, quote):
+    paragraph=""
+    while len(text)>right_margin:
+        i=right_margin
+        while i>0 and not text[i]==" ":
+            i-=1
+        paragraph+=text[:i]+"\n"
+        text=" "*left_margin+text[i+1:]
+    paragraph+=text
+    if quote:
+        paragraph=GREY+paragraph+NORMAL
+    return(paragraph)
+
+def getclass(tag):
+    classes=tag.get("class")
+    if not classes == None:
+        return(" ".join(classes))
+    else:
+        return("")
+
+def query_function(tag):
+    return ((tag.name == "div" and getclass(tag) == "ddef_h") or
+            (tag.name == "div" and getclass(tag) == "examp dexamp") or
+            (tag.name == "div" and getclass(tag) == "h2 dhw dpos-h_hw lpt-5 lpb-10") or
+            (tag.name == "div" and getclass(tag) == "lbb lb-cm lpt-10"))
+
+word = ' '.join([str(elem) for elem in sys.argv[1:]])
+c.execute('''SELECT * FROM dictionary WHERE word  = ?''', (word,))
+entry = c.fetchone()
+
+def cambridge(word):
+    url = "https://dictionary.cambridge.org/dictionary/english/" + word
+    response = requests.get(url, headers=headers)
+    remove = ["A1", "A2", "B1", "B2", "C1"]
+    soup = BeautifulSoup(response.text, "html.parser")
+    print(f'{soup.find(class_="ti fs fs12 lmb-0 hw superentry").get_text()}:')
+    text = soup.findAll(query_function)
+    num = 0
+    meaning_ = ""
+    for item in text:
+        if item.name == "div" and getclass(item) == "ddef_h":
+            num += 1
+            a = item.get_text().lstrip(" ").rstrip(": ").split()
+            a_list = [word for word in a if word not in remove]
+            actual = ' '.join(a_list)
+            meaning_ = meaning_ + print_paragraph(3 if num<10 else 4,f'\n{num}. {actual}\n\n',ITEM)
+        elif item.name == "div" and getclass(item) == "examp dexamp":
+            a = item.get_text().lstrip(" ").rstrip(": ").split()
+            actual = ' '.join(a)
+            meaning_ = meaning_ + print_paragraph(5, f'     - {actual}\n',QUOTE)
+        elif item.name == "div" and getclass(item) == "h2 dhw dpos-h_hw lpt-5 lpb-10":
+            meaning_ = meaning_ + "\n[EXAMPLES]\n"
+        elif item.name == "div" and getclass(item) == "lbb lb-cm lpt-10":
+            test=item.contents
+            actual = ""
+            for test_item in test:
+                if test_item.name == "span" and getclass(test_item) == "deg":
+                    actual+=' '.join(test_item.get_text().lstrip(" ").rstrip(": ").split())
+                elif test_item.name == "a" and getclass(test_item) == "hdib tb lmb-10":
+                    actual+=BOLD+test_item.get_text()+NORMAL+": "
+                elif test_item.name == "div" and getclass(test_item) == "dexamp":
+                    actual+=test_item.get_text()
+            meaning_ = meaning_ + print_paragraph(0, "\n"+actual+"\n",ITEM)
+
+    print_out(meaning_, sys.stdout.isatty()) 
+    c.execute('''INSERT INTO dictionary VALUES(?,?)''', (word, meaning_))
+
+def indb(word):
+    if entry:
+        print(f"Meaning of {entry[0]} in English: ")
+        print_out(entry[1], sys.stdout.isatty())
+    else:
+        cambridge(word)
+
+try:
+    indb(word)
+except:
+    print("Something went wrong!")
+    print("Possibly the word you entered is not in the dictionary or there's a connection issue")
+
+conn.commit()
+conn.close()

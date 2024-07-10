@@ -1,0 +1,84 @@
+diff original/home/cache/dein/repos/github.com/vim-scripts/foldutil.vim/plugin/foldutil.vim patched/home/cache/dein/repos/github.com/vim-scripts/foldutil.vim/plugin/foldutil.vim
+231,238d230
+< if !exists('loaded_genutils')
+<   runtime plugin/genutils.vim
+< endif
+< if !exists('loaded_genutils') || loaded_genutils < 200
+<   echomsg 'foldutil: You need a newer version of genutils.vim plugin'
+<   finish
+< endif
+< 
+240a233,293
+> " Functions taken from genutils plugin
+> " 
+> function! s:SaveHardPosition(id)
+>   let b:sp_col_{a:id} = virtcol(".")
+>   let b:sp_lin_{a:id} = line(".")
+>   " Avoid accounting for wrapped lines.
+>   let _wrap = &l:wrap
+>   try
+>     setl nowrap
+>     let b:sp_winline_{a:id} = winline()
+>   finally
+>     let &l:wrap = _wrap
+>   endtry
+> endfunction
+> 
+> function! s:RestoreHardPosition(id)
+>   " This doesn't take virtual column.
+>   "call cursor(b:sp_lin_{a:id}, b:sp_col_{a:id})
+>   " Vim7 generates E16 if line number is invalid.
+>   " TODO: Why is this leaving cursor on the last-but-one line when the
+>   " condition meets?
+>   execute ((line('$') < b:sp_lin_{a:id}) ? line('$') :
+>         \ b:sp_lin_{a:id})
+>   "execute b:sp_lin_{a:id}
+>   execute ((line('$') < b:sp_lin_{a:id}) ? line('$') :
+>         \ b:sp_lin_{a:id})
+>   "execute b:sp_lin_{a:id}
+>   execute "normal!" b:sp_col_{a:id} . "|"
+>   call s:MoveCurLineToWinLine(b:sp_winline_{a:id})
+> endfunction
+> 
+> function! s:MoveCurLineToWinLine(n)
+>   normal! zt
+>   if a:n == 1
+>     return
+>   endif
+>   let _wrap = &l:wrap
+>   setl nowrap
+>   let n = a:n
+>   if n >= winheight(0)
+>     let n = winheight(0)
+>   endif
+>   let n = n - 1
+>   execute "normal! " . n . "\<C-Y>"
+>   let &l:wrap = _wrap
+> endfunction
+> 
+> function! s:CmpByNumber(line1, line2, ...)
+>   let direction = (a:0 ? a:1 :1)
+>   let num1 = a:line1 + 0
+>   let num2 = a:line2 + 0
+> 
+>   if num1 < num2
+>     return -direction
+>   elseif num1 > num2
+>     return direction
+>   else
+>     return 0
+>   endif
+> endfunction
+> 
+412c465
+<   call genutils#SaveHardPosition('FoldUtil')
+---
+>   call s:SaveHardPosition('FoldUtil')
+486c539
+<   call genutils#RestoreHardPosition('FoldUtil')
+---
+>   call s:RestoreHardPosition('FoldUtil')
+563c616
+<     let lines = sort(split(a:lines, ','), 'genutils#CmpByNumber')
+---
+>     let lines = sort(split(a:lines, ','), 's:CmpByNumber')

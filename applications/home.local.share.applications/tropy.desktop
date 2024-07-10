@@ -1,0 +1,10 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=1.0
+Terminal=false
+Type=Application
+Name=Tropy
+Exec=/home/ivan/Programs/Tropy-1.14.0-x86_64.AppImage %U
+Icon=/home/ivan/Projects/Dot-files/dot-files/Icons/kisspng-microsoft-visio-computer-icons-symbol-macos-bb-5aeeaa421c27c0.2175931315255905941153.png
+MimeType=application/vnd.tropy.tropy;application/vnd.tropy.mtpy;application/vnd.tropy.tpy;application/vnd.tropy.ttp;x-scheme-handler/tropy;
+Categories=Graphics;Viewer;Science;

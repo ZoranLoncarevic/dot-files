@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=2048
+Comment=Sliding tile puzzle game
+Exec=/home/ivan/Programs/2048-qt
+Icon=/home/ivan/Projects/Dot-files/dot-files/Icons/2048-icon-2025x2048-d48254hz.png.output.png
+Type=Application
+Keywords=puzzle;game;
+Categories=Qt;Game;

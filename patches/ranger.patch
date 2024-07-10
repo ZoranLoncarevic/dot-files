@@ -1,0 +1,5 @@
+diff original/usr/lib/python3/dist-packages/ranger/ext/img_display.py patched/usr/lib/python3/dist-packages/ranger/ext/img_display.py
+688c688
+<         self.image_id -= 1
+---
+>         self.image_id = max(0, self.image_id - 1)

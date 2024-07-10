@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Terminal=false
+Categories=Office;Dictionary;Education;Qt;
+Name=GoldenDict
+GenericName=Multiformat Dictionary
+Comment=A feature-rich dictionary lookup program
+Keywords=Голдендицт;
+Icon=goldendict
+Exec=goldendict %u
+MimeType=x-scheme-handler/goldendict;x-scheme-handler/dict;

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Version=3.7.1+32
+Name=Spotube
+GenericName=Music Streaming Application
+Icon=/home/ivan/Projects/Dot-files/dot-files/Icons/3d-blue-headphones-isolated-transparent-background_191095-16413.png
+Exec=spotube %U
+MimeType=x-scheme-handler/spotify;
+Categories=Music;
+Keywords=Music;Spotify;Media;Streaming;YouTube;

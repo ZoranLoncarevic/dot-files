@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+
+convert "$1" -resize 48x48 /tmp/dock_test_icon.png
+GDK_BACKEND=x11 yad --window-icon=/tmp/dock_test_icon.png

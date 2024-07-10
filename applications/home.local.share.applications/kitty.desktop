@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=kitty
+GenericName=Terminal emulator
+Comment=Fast, feature-rich, GPU based terminal
+TryExec=kitty
+Exec=/home/ivan/Programs/Kitty/bin/kitty
+Icon=/home/ivan/Projects/Dot-files/dot-files/Icons/Kitty-icon-256-bevel-3.png
+Categories=System;TerminalEmulator;

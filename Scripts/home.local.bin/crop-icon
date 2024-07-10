@@ -1,0 +1,27 @@
+#!/usr/bin/bash
+#
+# A simple script to trim empty space around an icon and make it square
+# usage: crop-icon icon-file
+
+max() {
+  if [ $2 -gt $1 ]
+  then
+    echo $2
+  else
+    echo $1
+  fi
+}
+
+if [ "$#" -ne 1 ]; then
+    echo "usage: ${0##*/} image-file"
+    exit 1
+fi
+
+convert $1 -trim $1.temp.png
+
+ww=$(convert "$1.temp.png" -ping -format "%w" info:)
+hh=$(convert "$1.temp.png" -ping -format "%h" info:)
+nwh=$(max $ww $hh)
+
+convert "$1.temp.png" -gravity center -background transparent -extent ${nwh}x${nwh} "$1.output.png"
+rm "$1.temp.png"

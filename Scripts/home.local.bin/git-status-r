@@ -1,0 +1,16 @@
+#!/usr/bin/bash
+#
+# Summarily show statuses of all git repositories below given directory
+# usage: git status-r directory
+
+find ${1:-.} -type d -name .git |
+{
+	while IFS=$'\n' read -r line; do
+		if ! [ -z "$(git -C "${line%/.git}" status --untracked-files=no --porcelain)" ]; then
+			echo ${line%/.git}": "
+			git -C "${line%/.git}" -c color.status=always status -s | sed "s/^/  /"
+			echo
+		fi
+	done
+
+}

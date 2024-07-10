@@ -1,0 +1,96 @@
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias cd-='cd -'
+alias cd..='cd ..'
+alias cd...='cd ../..'
+alias cd....='cd ../../..'
+
+alias python='python3'
+alias open='xdg-open'
+
+# make directory and immediately cd into it
+function mkcd() {
+	mkdir -p "$@" && cd "$1" || echo "Couldn't cd into $1"
+}
+
+# move a file, leaving in it's place a symbolic link to it's new location
+function mvln() {
+	if [ -L "$1" ]; then
+		echo "First argument must not be a symbolic link."
+		return 1
+	fi
+	if [ ! -d "$2" ]; then
+		echo "Second argument must be directory."
+		return 1
+	fi
+	mv -i "$1" "$2" || return 1
+	new_location=$(realpath "$2/${1##*/}")
+	ln -s "$new_location" "$1"
+}
+
+# edit bash function
+function edit() {
+	[[ -z "$1" ]] && return 1
+	temp_file=$(mktemp --tmpdir function-XXXXXX)
+	declare -f "$1" > "$temp_file" || return 1
+	$EDITOR "$temp_file" +"set filetype=sh"
+	source "$temp_file"
+}
+
+# version of ping with default host
+ping-with-default() {
+  if [[ $# -eq 0 ]]; then
+    ping www.google.com
+  else
+    ping "$@"
+  fi
+}
+
+alias ping='ping-with-default'
+alias fd='fdfind'
+alias weather='curl -s v2.wttr.in'
+alias iftop='sudo iftop -i wlo1'
+alias cdgit='cd $HOME/Sources/Github;git'
+
+# # Query dictionary server
+# function dict() {
+# 	curl dict://dict.org/d:"$*"
+# }
+
+function setprompt() {
+	case "$1" in
+		"default")
+			PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ ' ;;
+		"arrow")
+			PS1='\[\033[01;32m\] 🠊 \[\033[00m\] ' ;;
+		"arrow2")
+			PS1='\[\033[01;32m\] ❱\[\033[00m\] ' ;;
+		*)	echo "Unknown prompt!"
+	esac
+}
+
+# set terminal window title
+# Taken from https://unix.stackexchange.com/a/186167
+function set-title() {
+	if [[ -z "$ORIGINAL_PS1" ]]; then
+		ORIGINAL_PS1=$PS1
+	fi
+	
+	if [[ $# -eq 0 ]]; then
+		PS1=${ORIGINAL_PS1}
+	else
+		TITLE="\[\e]2;$*\a\]"
+		PS1=${ORIGINAL_PS1}${TITLE}
+	fi
+}
+
+function wcd() {
+	go_file="${WCDHOME:-${HOME}}/bin/wcd.go"
+	rm -f "$go" 2> /dev/null
+	
+	wcd.exec "$@"
+	[ -f "$go_file" ] && . "$go_file"
+	unset go_file
+}
+

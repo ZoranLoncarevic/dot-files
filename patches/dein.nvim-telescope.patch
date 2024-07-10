@@ -1,0 +1,14 @@
+diff  original/home/cache/dein/repos/github.com/nvim-telescope/telescope.nvim_0.1.4/plugin/telescope.lua patched/home/cache/dein/repos/github.com/nvim-telescope/telescope.nvim_0.1.4/plugin/telescope.lua
+126a127,138
+>     if vim.startswith(l[#l],"cwd=") then
+>       local root_directory = l[#l]:match("^cwd=(.*/).*$") or "./"
+>       local filter = l[#l]:match("^cwd=.*/(.*)$") or ""
+>       local return_table = vim.tbl_filter(function(val)
+> 	return vim.fn.isdirectory(val)==1
+>       end, vim.fn.glob(root_directory .. filter .. "*", 1, 1))
+>       for k,v in pairs(return_table) do
+> 	return_table[k] = "cwd=" .. return_table[k]
+>       end
+>       return return_table
+>     end
+> 

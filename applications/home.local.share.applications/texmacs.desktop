@@ -1,0 +1,15 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=GNU TeXmacs
+GenericName=Text Editor
+Comment=A structured wysiwyg scientific text editor
+MimeType=text/x-texmacs.doc;text/x-texmacs.sty;text/plain;text/x-tex;
+Exec=texmacs %f
+Icon=/home/ivan/Projects/Dot-files/dot-files/Icons/texmacs-d5h5673-fa15f25b-723a-4eba-8ab5-8cc574b4db8d-fliped-desaturated-2.png
+Terminal=false
+Categories=Education;Science;Math;
+X-KDE-Priority=TopLevel
+#InitialPreference=99
+StartupWMClass=texmacs.bin
+StartupNotify=false

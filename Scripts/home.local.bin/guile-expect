@@ -1,0 +1,9 @@
+#!/usr/bin/expect
+
+spawn guile -q
+while 1 {
+  expect -re {scheme@\(guile-user\)[^>]*> }
+  expect_user -re {(.*)\n}
+  send "$expect_out(1,string)\r"
+}
+

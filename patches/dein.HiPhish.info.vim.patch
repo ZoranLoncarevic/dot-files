@@ -1,0 +1,13 @@
+diff original/home/cache/dein/repos/github.com/HiPhish/info.vim/autoload/info/reference.vim patched/home/cache/dein/repos/github.com/HiPhish/info.vim/autoload/info/reference.vim
+48a49,54
+> 	let l:line = matchstr(a:string,'\v\(line\s+\zs[0-9]+\ze\)$')
+> 	if empty(l:line)
+> 		return {'Name': l:name, 'File': l:file, 'Node': l:node}
+> 	else
+> 		return {'Name': l:name, 'File': l:file, 'Node': l:node, 'line': l:line}
+> 	endif
+diff original/home/cache/dein/repos/github.com/HiPhish/info.vim/plugin/info.vim patched/home/cache/dein/repos/github.com/HiPhish/info.vim/plugin/info.vim
+454c454
+< 	let l:referencePattern = '\v\*([Nn]ote\s+)?\_[^:]+\:(\:|\_[^.,]+[.,])'
+---
+> 	let l:referencePattern = '\v\*([Nn]ote\s+)?\_[^:]+\:(\:|\_[^.,]+[.,])(\s+\(line\s+[0-9]+\))?'

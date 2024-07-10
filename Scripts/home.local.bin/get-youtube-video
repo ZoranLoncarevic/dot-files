@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+#
+# Plays youtube video using mplayer and yt-dlp
+
+gnome-session-inhibit mplayer -quiet -cache 10240 "$(yt-dlp -f 22/18 -g $1)"

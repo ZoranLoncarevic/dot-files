@@ -1,0 +1,6 @@
+#! /bin/bash
+# -*- mode: sh -*-
+
+export source_file=${NAUTILUS_SCRIPT_SELECTED_FILE_PATHS%%$'\n'*}
+
+touch "$source_file"

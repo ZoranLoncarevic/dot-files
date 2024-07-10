@@ -1,0 +1,11 @@
+#!/usr/bin/bash
+
+if [[ -z "$1" ]]; then
+	CDIR=$(pwd)
+	if [[ "$CDIR" =~ $HOME/Sources/Github ]]; then
+		GIT_ROOT=$(git remote get-url origin)
+		if [[ ! -z "$GIT_ROOT" ]]; then
+			xdg-open "$GIT_ROOT"
+		fi
+	fi
+fi

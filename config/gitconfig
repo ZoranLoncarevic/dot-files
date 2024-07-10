@@ -1,0 +1,13 @@
+[user]
+	name = Zoran Loncarevic
+	email = zlonc233@gmail.com
+
+[core]
+	editor = nvim
+
+[credential]
+	helper = store
+
+[alias]
+	llog = log --oneline --decorate --graph
+	redate = rebase --committer-date-is-author-date 

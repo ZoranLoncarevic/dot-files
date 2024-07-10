@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Joplin
+Comment=Joplin for Desktop
+Exec=/home/ivan/Programs/Joplin-2.13.15.AppImage
+Icon=/home/ivan/Projects/Dot-files/dot-files/Icons/joplin-bf571fcfa0838743cdcad14653eda413d317c037_2_500x500.png
+StartupWMClass=Joplin
+Type=Application
+Categories=Office;

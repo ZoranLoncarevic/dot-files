@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=GitKraken
+Exec=/home/ivan/Programs/Gitkraken/gitkraken
+Terminal=false
+Type=Application
+Icon=/home/ivan/Projects/Dot-files/dot-files/Icons/blue-octopus-with-blue-background_717445-345.png
+X-AppImage-Version=0.8.15
+Comment=Git clienet for the GNOME desktop envinronment
+Categories=GNOME;GTK;Development;

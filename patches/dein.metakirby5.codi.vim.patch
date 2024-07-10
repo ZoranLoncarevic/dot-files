@@ -1,0 +1,5 @@
+diff original/home/cache/dein/repos/github.com/metakirby5/codi.vim/autoload/codi.vim patched/home/cache/dein/repos/github.com/metakirby5/codi.vim/autoload/codi.vim
+814d813
+<   keepjumps keepalt wincmd p
+815a815
+>     keepjumps keepalt wincmd p

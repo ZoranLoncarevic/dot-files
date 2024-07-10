@@ -1,0 +1,18 @@
+#!/usr/bin/bash
+#
+# Move a file to new location, leaving behind in it's place a symbolic link
+
+if [ -L "$1" ]; then
+	echo "First argument must not be a symbolic link."
+	exit 1
+fi
+
+if [ ! -d "$2" ]; then
+	echo "Second argument must be a directory."
+	exit 1
+fi
+
+mv -i "$1" "$2" || exit 1
+new_location=$(realpath "$2/${1##*/}")
+ln -s "$new_location" "$1"
+	

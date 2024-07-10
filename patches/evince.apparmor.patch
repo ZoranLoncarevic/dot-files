@@ -1,0 +1,3 @@
+diff original/etc/apparmor.d/abstractions/evince patched/etc/apparmor.d/abstractions/evince
+45a46
+>   /usr/share/texlive/texmf-dist/scripts/texlive/mktexpk Cx -> sanitized_helper,

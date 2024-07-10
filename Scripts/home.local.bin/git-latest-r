@@ -1,0 +1,14 @@
+#!/usr/bin/bash
+#
+# Lists all git repositories below given directory sorted by date
+# of last commit.
+
+find ${1:-.} -type d -name .git |
+{
+	while IFS=$'\n' read -r line; do
+		author_date=$(git -C "${line%/.git}" log -1 --format="%ai")
+		line1=${line#\./}
+		echo "$author_date" "  " "${line1%/.git}"
+	done
+
+} | sort -r

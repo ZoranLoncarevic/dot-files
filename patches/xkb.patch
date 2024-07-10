@@ -1,0 +1,74 @@
+diff original/usr/share/X11/xkb/symbols/latin patched/usr/share/X11/xkb/symbols/latin
+24,27c24,27
+<     key <AD06>	{ [         y,          Y,    leftarrow,          yen ]	};
+<     key <AD07>	{ [         u,          U,    downarrow,      uparrow ]	};
+<     key <AD08>	{ [         i,          I,   rightarrow,     idotless ]	};
+<     key <AD09>	{ [         o,          O,       oslash,       Oslash ]	};
+---
+>     key <AD06>	{ [         y,          Y,         Home,         Home ]	};
+>     key <AD07>	{ [         u,          U,         Next,         Next ]	};
+>     key <AD08>	{ [         i,          I,        Prior,        Prior ]	};
+>     key <AD09>	{ [         o,          O,          End,          End ]	};
+37,40c37,40
+<     key <AC06>	{ [         h,          H,      hstroke,      Hstroke ]	};
+<     key <AC07>	{ [         j,          J,    dead_hook,    dead_horn ] };
+<     key <AC08>	{ [         k,          K,          kra,    ampersand ]	};
+<     key <AC09>	{ [         l,          L,      lstroke,      Lstroke ]	};
+---
+>     key <AC06>	{ [         h,          H,         Left,         Left ]	};
+>     key <AC07>	{ [         j,          J,         Down,         Down ] };
+>     key <AC08>	{ [         k,          K,           Up,           Up ]	};
+>     key <AC09>	{ [         l,          L,        Right,        Right ]	};
+diff original/usr/share/X11/xkb/symbols/us patched/usr/share/X11/xkb/symbols/us
+25,28c25,28
+<     key <AD06>	{[	 y,	 Y		]};
+<     key <AD07>	{[	 u,	 U		]};
+<     key <AD08>	{[	 i,	 I		]};
+<     key <AD09>	{[	 o,	 O		]};
+---
+>     key <AD06>	{[	 y,	 Y,	Home,	Home]};
+>     key <AD07>	{[	 u,	 U,	Next,	Next]};
+>     key <AD08>	{[	 i,	 I,	Prior,	Prior]};
+>     key <AD09>	{[	 o,	 O,	End,	End]};
+38,41c38,41
+<     key <AC06>	{[	 h,	 H		]};
+<     key <AC07>	{[	 j,	 J		]};
+<     key <AC08>	{[	 k,	 K		]};
+<     key <AC09>	{[	 l,	 L		]};
+---
+>     key <AC06>	{[	 h,	 H,	Left,	Left]};
+>     key <AC07>	{[	 j,	 J,	Down,	Down]};
+>     key <AC08>	{[	 k,	 K,	Up,	Up]};
+>     key <AC09>	{[	 l,	 L,	Right,	Right]};
+55a56,57
+> 
+>     include "level3(ralt_switch)"
+diff original/usr/share/X11/xkb/symbols/rs patched/usr/share/X11/xkb/symbols/rs
+161,165c161,164
+<     key <AD06> { [ any, any,   leftarrow,           yen              ] }; // y
+<     key <AD07> { [ any, any,   downarrow,           uparrow          ] }; // u
+<     key <AD08> { [ any, any,   rightarrow,          idotless         ] }; // i
+<     key <AD09> { type[Group1] = "FOUR_LEVEL_ALPHABETIC",
+<                  [ any, any,   oslash,              Oslash           ] }; // o
+---
+>     key <AD06> { [ any, any,   Home,                Home             ] }; // y
+>     key <AD07> { [ any, any,   Next,                Next             ] }; // u
+>     key <AD08> { [ any, any,   Prior,               Prior            ] }; // i
+>     key <AD09> { [ any, any,   End,                 End              ] }; // o
+178,180c177,179
+<                  [ any, any,   hstroke,             Hstroke          ] }; // h
+<     key <AC08> { [ any, any,   lstroke,             ampersand        ] }; // k
+<     key <AC09> { [ any, any,   lstroke,             Lstroke          ] }; // l
+---
+>                  [ any, any,   Left,                Left             ] }; // h
+>     key <AC08> { [ any, any,   Up,                  Up               ] }; // k
+>     key <AC09> { [ any, any,   Right,               Right            ] }; // l
+diff original/usr/share/X11/xkb/keycodes/evdev patched/usr/share/X11/xkb/keycodes/evdev
+53c53
+< 	<LSGT> = 94;
+---
+> 	// <LSGT> = 94;
+75c75
+< 	<RCTL> = 105;
+---
+> 	<RCTL> = 94;

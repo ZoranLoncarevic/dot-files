@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Muffon
+Exec=/home/ivan/Programs/muffon-2.0.2-linux-x86_64.AppImage
+Terminal=false
+Type=Application
+Icon=/home/ivan/Projects/Dot-files/dot-files/Icons/muffon-logo-beveled-Untitled.png
+#X-AppImage-Version=0.8.15
+Keywords=streaming;player;music;audio;
+Comment=An advanced music streaming client
+Categories=AudioVideo;Audio;Player;
+MimeType=x-scheme-handler/muffon;text/html;

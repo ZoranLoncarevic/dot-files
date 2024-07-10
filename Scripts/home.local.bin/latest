@@ -1,0 +1,7 @@
+#!/usr/bin/bash
+#
+# Recursively list all files below given directory
+# sorted by date of file's last modification, skipping
+# .git directories.
+
+find -L ${1:-.} -name .git -prune -o -not -type d -printf "%TF %TH:%TM\t%P\n" | sort -nr

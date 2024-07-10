@@ -1,0 +1,237 @@
+#!/bin/bash
+# Copyright (C) 2018 Zoran Loncarevic
+
+if [[ -z "$PATCH_BASE_DIRECTORY" ]]; then
+	PATCH_BASE_DIRECTORY=$HOME/Dot-files/patches
+fi
+
+if [[ -z "$DOTFILES_BASE_DIRECTORY" ]]; then
+	DOTFILES_BASE_DIRECTORY=$HOME/Dot-files/dot-files
+fi
+
+function quote_slashes()
+{
+	echo $1 | sed 's/\//\\\//g'
+}
+
+function quote_space()
+{
+	if [[ "$1" =~ " " ]]; then
+		echo '"'"$1"'"'
+	else
+		echo "$1"
+	fi
+}
+
+function shepherd_help()
+{
+	echo "usage: shepherd command arguments" >&2 
+	echo >&2 
+	echo "Available commands are diff, stow, install and help." >&2 
+	exit 0
+
+}
+
+function is_original_path()
+{
+	[[ "$1" =~ ^$PATCH_BASE_DIRECTORY/original ]]
+}
+
+function is_patched_path()
+{
+	[[ "$1" =~ ^$PATCH_BASE_DIRECTORY/patched ]]
+}
+
+function corresponding_patched()
+{
+	echo "${1/#$PATCH_BASE_DIRECTORY\/original/$PATCH_BASE_DIRECTORY\/patched}"
+
+}
+
+function corresponding_original()
+{
+	echo "${1/#$PATCH_BASE_DIRECTORY\/patched/$PATCH_BASE_DIRECTORY\/original}"
+
+}
+
+function corresponding_installed()
+{
+	echo "$1" |
+	sed 's/^patched//
+	     s/^original//
+	     s/^\/home\/cache/\/home\/.cache/
+	     s/^\/home\//'"$(quote_slashes "$HOME")"'\//'
+}
+
+function translate_path()
+{
+	echo "$1"
+	
+}
+
+function shepherd_stow()
+{
+	local diff_against="original"
+	if [[ "$1" == "-o" ]]; then
+		shift
+		diff_against="original"
+	elif [[ "$1" == "-p" ]]; then
+		shift
+		diff_against="patched"
+	fi
+
+	if [[ "$#" -ne 1 ]]; then
+		echo "shepherd: too many or too few arguments." >&2 
+		exit 1
+	fi
+
+	local path=$(realpath "$1")
+	local translated_path=$(sed 's/^'"$(quote_slashes "$HOME")"'\//\/home\//
+				     s/^\/home\/.cache\//\/home\/cache\//' <<< "$path")
+	local destination=$PATCH_BASE_DIRECTORY/${diff_against}${translated_path}
+	mkdir -p "${destination%/*}"
+	cp -i "$path" "$destination"
+}
+
+function shepherd_create_patch_file()
+{
+	local patch_file=$1
+	if [[ "$patch_file" == "-" ]]; then
+		patch_file="/dev/fd/1"
+	fi
+
+	local target=$(realpath "$2")
+	if is_original_path "$target"; then
+		patched=$(corresponding_patched "$target")
+		original=$target
+	elif is_patched_path "$target"; then
+		original=$(corresponding_original "$target")
+		patched=$target
+	else
+		echo "shepherd: path '$target' must be inside \$PATCH_BASE_DIRECTORY/{patched,original}" >&2 
+		exit 1
+	fi
+
+	patched=${patched#$PATCH_BASE_DIRECTORY/}
+	original=${original#$PATCH_BASE_DIRECTORY/}
+	
+	( cd "$PATCH_BASE_DIRECTORY"
+	  if [[ -d "$original" ]]; then
+		  diff -r "$original" "$patched" |
+		  sed 's/^diff -r/diff /'
+	  else
+		  echo "diff $(quote_space "$original") $(quote_space "$patched")"
+		  diff "$original" "$patched"
+	  fi ) > "$patch_file"
+}
+
+function shepherd_diff_with_install()
+{
+	while IFS= read -r ; do
+		target=$REPLY
+		[[ "$1" == "patched" ]] && target=${REPLY/#original/patched}
+		local installed=$(corresponding_installed "$target")
+		echo "diff $(quote_space "$target") $(quote_space "$installed")"
+		diff "$target" "$installed"
+	done
+}
+
+function shepherd_diff()
+{
+	diff_against=""
+	if [[ "$1" == "-c" ]]; then
+		shift
+		if [[ "$#" -ne 2 ]]; then
+			echo "too few arguments." >&2
+			exit 1
+		fi
+		diff_against="patched"
+		shepherd_create_patch_file "$@"
+		exit $?
+	elif [[ "$1" == "-o" ]]; then
+		shift
+		diff_against="original"
+	elif [[ "$1" == "-p" ]]; then
+		shift
+		diff_against="patched"
+	fi
+
+	if [[ "$#" -ne 1 ]]; then
+		echo "shepherd: too many or too few arguments." >&2 
+		exit 1
+	fi
+
+	local diff_target=$(realpath "$1")
+	if is_original_path "$diff_target" ||
+	   is_patched_path "$diff_target"; then
+		( cd "$PATCH_BASE_DIRECTORY"
+		  diff_target=${diff_target#$PATCH_BASE_DIRECTORY/}
+		  if [[ -d "$diff_target" ]]; then
+			  find "$diff_target" -not -type d |
+			  shepherd_diff_with_install "$diff_against"
+		  else
+			  echo "$diff_target" |
+			  shepherd_diff_with_install "$diff_against"
+		  fi
+		)
+	else
+		( cd "$PATCH_BASE_DIRECTORY"
+		  grep -oP '(?<=^diff )("([^"]*\\")*[^"]*"|[^"][^ ]*)' "$diff_target" |
+		  shepherd_diff_with_install "$diff_against"
+		)
+	fi
+}
+
+function shepherd_install_scripts()
+{
+	cp -a "$DOTFILES_BASE_DIRECTORY"/Scripts/home.local.bin/* $HOME/.local/bin
+	ln -s "$DOTFILES_BASE_DIRECTORY"/Scripts/nautilus.scripts/*  $HOME/.local/share/nautilus/scripts
+}
+
+function shepherd_install_applications()
+{
+	cp -a "$DOTFILES_BASE_DIRECTORY"/applications/home.local.share.applications/* $HOME/.local/share/applications
+	echo Trying cp -a "$DOTFILES_BASE_DIRECTORY"/applications/usr.share.applications/'*' /usr/share/applications
+	sudo cp -a "$DOTFILES_BASE_DIRECTORY"/applications/usr.share.applications/* /usr/share/applications
+}
+
+function shepherd_install_config()
+{
+	cp -a "$DOTFILES_BASE_DIRECTORY/config/bash_aliases" ~/.bash_aliases
+	cp -a "$DOTFILES_BASE_DIRECTORY/config/bashrc" ~/.bashrc
+	cp -a "$DOTFILES_BASE_DIRECTORY/config/gitconfig" ~/.gitconfig
+	cp -a "$DOTFILES_BASE_DIRECTORY/config/guile" ~/.guile
+	cp -a "$DOTFILES_BASE_DIRECTORY/config/mplayer.config" ~/.mplayer/config
+	cp -a "$DOTFILES_BASE_DIRECTORY/config/profile" ~/.profile
+	cp -a "$DOTFILES_BASE_DIRECTORY/config/ranger.rc.conf" ~/.config/ranger/rc.conf
+	cp -a "$DOTFILES_BASE_DIRECTORY/config/yt-dlp.config" ~/.config/yt-dlp/config
+}
+
+function shepherd_install()
+{
+	case "$1" in
+		config) shepherd_install_config ;;
+		applications) shepherd_install_applications ;;
+		scripts) shepherd_install_scripts ;;
+		*) echo "shepherd: don't know how to install '$1'." >&2
+		   exit 1
+	esac
+}
+
+if [[ -z "$1" ]]; then
+	shepherd_help
+fi
+
+cmd="$1"
+shift
+
+case "$cmd" in
+	diff) shepherd_diff "$@" ;;
+	stow) shepherd_stow "$@" ;;
+	help) shepherd_help "$@" ;;
+	create) shepherd_diff -c "$@" ;;
+	stow) shepherd_stow "$@" ;;
+	install) shepherd_install "$@" ;;
+	   *) echo "shepherd: '$cmd' is not a shepherd command." >&2   
+	      exit 1
+esac

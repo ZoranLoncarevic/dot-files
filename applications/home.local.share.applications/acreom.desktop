@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=acreom
+Icon=/home/ivan/Projects/Dot-files/dot-files/Icons/acreom-icon.png
+Exec=/home/ivan/Programs/acreom-1.15.4.AppImage  --no-sandbox %U
+Terminal=false
+Type=Application
+StartupWMClass=acreom
+Categories=Utility;
+MimeType=text/html;x-scheme-handler/acreom;

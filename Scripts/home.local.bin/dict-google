@@ -1,0 +1,96 @@
+#!/usr/bin/env python3
+
+from bs4 import BeautifulSoup
+import requests
+import sys
+import re
+
+QUOTE=1
+ITEM=0
+right_margin=80
+
+GREY="\u001b[38;5;245m"
+BLUE='\033[94m'
+NORMAL='\033[0m'
+
+use_color = sys.stdout.isatty()
+
+def print_header(text):
+    if use_color:
+        print(BLUE+text+NORMAL)
+    else:
+        print(text)
+
+def print_paragraph(item_number, text, quote):
+    if quote:
+        left_margin=" "*6 #(4 if item_number<11 else 5)
+        paragraph=left_margin + text
+    else:
+        left_margin=" "*(3 if item_number<10 else 4)
+        paragraph="\n" + str(item_number) + ". " + text
+    
+    while len(paragraph)>right_margin:
+        i=right_margin
+        while i>0 and not paragraph[i]==" ":
+            i-=1
+        print(paragraph[:i])
+        paragraph=left_margin+paragraph[i+1:]
+
+    if quote and use_color:
+        print(GREY+paragraph+NORMAL)
+    else:
+        print(paragraph)
+
+def query_function(tag):
+    return ((tag.name == "div" and tag.get("id") == "forEmbed") or
+            (tag.name == "li"  and tag.get("style") == "list-style:decimal") or
+            (tag.name == "li"  and tag.get("style") == "color:#767676;list-style:none") or
+            (tag.name == "li"  and tag.get("style") == "list-style:decimal; margin-bottom:10px;") or
+            (tag.name == "h2"))
+
+def get_meaning(word):
+
+    """
+     Returns a list containg all the meanings of word 
+         Args:
+             word (str): word for searching the meanings
+         Returns:
+             list
+    """
+
+    url = "https://googledictionary.freecollocation.com/meaning?word=" + word
+    response = requests.get(url)
+    soupBody = BeautifulSoup(response.content,features = "html.parser")
+    text = soupBody.findAll(query_function)
+    item_count=1
+    dont_skip_line=0
+    for tag in text:
+        if tag.name == "div" and tag.get("id") == "forEmbed":
+            text=tag.text.replace("\n", " ")
+            text=re.sub(r"^([^ ]+) ",r"[\1] ",text)
+            text=text.replace("Font  size:", "")
+            text=text.strip()
+            print_header("\n"+text)
+        elif tag.name == "li" and tag.get("style") == "list-style:decimal":
+            if "\n-" in tag.text:
+                text=tag.text
+                text=text[:text.index("\n-")]
+                text=text.replace("\n", " ")
+                text=text.strip()
+                print_paragraph(item_count, text+"\n", ITEM)
+                item_count+=1
+            else :
+                print_paragraph(item_count, tag.text.strip(), ITEM)
+                item_count+=1
+        elif tag.name == "li" and tag.get("style") == "color:#767676;list-style:none":
+            text=tag.text.replace("\n"," ")
+            text=re.sub(r"-\s*"," ",text)
+            text=text.strip()
+            print_paragraph(item_count, text, QUOTE)
+        elif tag.name == "h2":
+            print_header("\n[Web Definitions]")
+        elif tag.name == "li" and tag.get("style") == "list-style:decimal; margin-bottom:10px;":
+            print_paragraph(item_count, tag.text.strip(), ITEM)
+            item_count+=1
+
+get_meaning(sys.argv[1])
