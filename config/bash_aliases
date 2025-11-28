@@ -94,3 +94,6 @@ function wcd() {
 	unset go_file
 }
 
+function avif2jpg() {
+	ffmpeg -hide_banner -i "$1" -vf "select=eq(n\,0)" -q:v 3 "$1.jpg"
+}
