@@ -124,3 +124,8 @@ fi
 source /home/ivan/.config/broot/launcher/bash/br
 
 export WCDHOME=$HOME/.wcd
+. "/home/ivan/.deno/env"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
