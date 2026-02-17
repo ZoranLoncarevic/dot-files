@@ -1,0 +1,12 @@
+[Desktop Entry]
+X-SnapInstanceName=youtube-music-desktop-app
+Name=YouTube Music Desktop App
+X-SnapAppName=youtube-music-desktop-app
+Exec=env BAMF_DESKTOP_FILE_HINT=/var/lib/snapd/desktop/applications/youtube-music-desktop-app_youtube-music-desktop-app.desktop /snap/bin/youtube-music-desktop-app
+Terminal=false
+Type=Application
+Icon=/home/ivan/Projects/Dot-files/dot-files/Icons/youtube-music-original-b1fab0754d5141ae4bc7caadc7b64f52-Photoroom.png
+StartupWMClass=YouTube Music Desktop App
+Comment=YouTube Music Desktop App
+MimeType=x-scheme-handler/ytmd;
+Categories=AudioVideo;

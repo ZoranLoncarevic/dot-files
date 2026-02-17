@@ -1,0 +1,13 @@
+[Desktop Entry]
+X-SnapInstanceName=spotify
+Type=Application
+Name=Spotify
+GenericName=Music Player
+Icon=/home/ivan/Downloads/Icons/spotify-3d-image_processing20200804-6622-15duyhk-bare_prev_ui.png.output.png
+X-SnapAppName=spotify
+Exec=env BAMF_DESKTOP_FILE_HINT=/var/lib/snapd/desktop/applications/spotify_spotify.desktop /snap/bin/spotify %U
+Terminal=false
+MimeType=x-scheme-handler/spotify;
+Categories=Audio;Music;Player;AudioVideo;
+StartupWMClass=spotify
+

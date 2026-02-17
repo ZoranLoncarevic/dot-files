@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Mayavi2
+Exec=mayavi2
+Icon=/home/ivan/Projects/Dot-files/dot-files/Icons/mayavi-surface-4-unnamed-Photoroom-1.png
+Terminal=false
+Categories=Science;Graphics;
