@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Jupyter Notebook
+Comment=Run Jupyter Notebook
+Exec=jupyter-notebook %f
+Terminal=true
+Type=Application
+Icon=/home/ivan/Projects/Dot-files/dot-files/Icons/jupyter_app_icon_161280.png
+StartupNotify=true
+MimeType=application/x-ipynb+json;
+Categories=Development;Education;
+Keywords=python;
