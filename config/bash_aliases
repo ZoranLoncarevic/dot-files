@@ -52,6 +52,7 @@ alias fd='fdfind'
 alias weather='curl -s v2.wttr.in'
 alias iftop='sudo iftop -i wlo1'
 alias cdgit='cd $HOME/Sources/Github;git'
+alias ps_mem='sudo ps_mem.py'
 
 # # Query dictionary server
 # function dict() {
