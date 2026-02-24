@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=R x11
+Icon=/home/ivan/Projects/Dot-files/dot-files/Icons/Rlogo.png
+Exec=true
+NoDisplay=true
+StartupWMClass=R_x11
