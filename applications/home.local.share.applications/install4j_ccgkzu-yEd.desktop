@@ -3,6 +3,6 @@
 Type=Application
 Name=yEd Graph Editor
 Exec="/home/ivan/Programs/yEd/yEd" %U
-Icon=/home/ivan/Programs/yEd/.install4j/yEd.png
+Icon=/home/ivan/Projects/Dot-files/dot-files/Icons/flow-chart-3d-icon-png-download-9057112.png
 Categories=Application;
 StartupWMClass=install4j-com-yworks-A-yEd
