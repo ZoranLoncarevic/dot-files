@@ -53,6 +53,7 @@ alias weather='curl -s v2.wttr.in'
 alias iftop='sudo iftop -i wlo1'
 alias cdgit='cd $HOME/Sources/Github;git'
 alias ps_mem='sudo ps_mem.py'
+alias mkvenv='python3 -m venv --system-site-packages'
 
 # # Query dictionary server
 # function dict() {
@@ -97,4 +98,8 @@ function wcd() {
 
 function avif2jpg() {
 	ffmpeg -hide_banner -i "$1" -vf "select=eq(n\,0)" -q:v 3 "$1.jpg"
+}
+
+function venv() {
+	source ~/.venvs/$1/bin/activate
 }

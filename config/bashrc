@@ -129,3 +129,22 @@ export WCDHOME=$HOME/.wcd
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+# activate default python virtual environment
+if [ -f ~/.venvs/default/bin/activate ]; then
+  source ~/.venvs/default/bin/activate
+else
+  echo Creating default virtual environment...
+  mkdir -p ~/.venvs/
+  python3 -m venv default --system-site-packages
+  source ~/.venvs/default/bin/activate
+fi
+
+# Warn if using system python
+function sys_python_warning() {
+  if [ "$(command -v python3)" = "/usr/bin/python3" ]; then
+    printf "\e[31m(system)\e[0m "
+  fi
+}
+PS1='$(sys_python_warning)'"${PS1:-}"
+
